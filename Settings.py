@@ -5,10 +5,14 @@ PASS = "oauth:"
 #Bot username
 IDENT = ""
 #which channel to join (must be all lowercase)
-CHANNEL = "cpmareplays"
+CHANNEL = ""
 #Put in format of "http(s)://domain.name/"
 WEBSERVER = ""
-#Game Directory
+#Path to index.html and queue.html. Example: "C:\inetpub\wwwroot"
+WEBDIR = ""
+#Game Directory/ Example: "C:\quake"
 GAMEDIR = ""
-#Filename of Game Client
+#Name of running mod folder, leave "" if running vq3. Example: "cpma"
+MODDIR = ""
+#Filename of Game Client. Example: "cnq3.exe"
 GAMEBIN = ""
