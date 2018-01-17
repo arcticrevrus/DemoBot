@@ -1,6 +1,7 @@
 import subprocess, re, psutil
 from Socket import openSocket, sendMessage
 from functions import *
+from settings import *
 
 commands = {"!help", "!add", "!demolist", "!commands", "!queue", "!download", "!upload", "!current", "!report" }
 
@@ -53,7 +54,7 @@ def commandUpdatedemos(s):
 	
 def commandDemolist(s):
 	#rewrite to use URL from Settings.py
-	sendMessage(s, "You can see the list of Demos and Demo ID's at http://arcticrevr.us/")
+	sendMessage(s, "You can see the list of Demos and Demo ID's at " +WEBSERVER)
 
 def commandCommands(s):
 	sendMessage(s, "The following commands are available for use: " + str(commands) )
@@ -69,16 +70,16 @@ def commandTest(s):
 	
 def commandQueue(s):
 	#rewrite to use URL from Settings.py
-	sendMessage(s, "You can see the current Queue at http://arcticrevr.us/queue.html")
+	sendMessage(s, "You can see the current Queue at " + WEBSERVER + "queue.html")
 	
 def commandDownload(s):
 	from functions import launchdemo
 	#rewrite to use URL from Settings.py
-	sendMessage(s, "You can download the current Demo at http://arcticrevr.us/demos/" + launchdemo + ".dm_68")
+	sendMessage(s, "You can download the current Demo at " + WEBSERVER + "demos/" + launchdemo + ".dm_68")
 	
 def commandUpload(s):
 	#rewrite to use URL from Settings.py
-	sendMessage(s, "You can upload your own demos by FTP'ing .dm_68 files to ftp://arcticrevr.us/")
+	sendMessage(s, "You can upload your own demos by FTP'ing .dm_68 files to " +WEBSERVER)
 	
 def commandCurrent(s):
 	from functions import launchdemo
@@ -93,7 +94,7 @@ def commandReport(s, message):
 	if re.search(r'!report \d+$', message.rstrip()) is not None:
 		if 0 <= int(re.search(r'(\d+)(?!.*\d)', message).group(0)) < len(demolist):
 			#rewrite to use GAMEDIR from Settings.py
-			reportfile = open("E:\quake\shitdemos.txt", "a")
+			reportfile = open(GAMEDIR +"/shitdemos.txt", "a")
 			reportfile.write(demolist[int(re.search(r'\d+$', message.rstrip()).group(0))] + "\n")
 			reportfile.close()
 			sendMessage(s, "Reported Demo: " + demolist[int(re.search(r'\d+$', message.rstrip()).group(0))] + ".")

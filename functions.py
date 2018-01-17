@@ -1,12 +1,13 @@
 import os, random, psutil, subprocess, time
 from Socket import openSocket, sendMessage
+from settings import *
 demolist = []
 # demo directory creation
 def updateDemos():
 	demolist.clear()
 	#rewrite to use webdir from Settings.py
-	openfile = open("C:\\inetpub\\wwwroot\\index.html", "a")
-	open("C:\\inetpub\\wwwroot\\index.html", 'w').close()
+	openfile = open(WEBDIR+"/index.html", "a")
+	open(WEBDIR+"/index.html", 'w').close()
 	TableTop = '<table style="width:100%">\n<tr>\n<th align="left">Demo ID</th>\n<th align="left">Demo Name</th>\n</tr>\n'
 	openfile.write(TableTop)
 	#rewrite to use gamedir and moddir from Settings.py
@@ -27,7 +28,7 @@ def queueUpdate():
 	updateDemos()
 	queueInit()
 	#rewrite to use webdir from Settings.py
-	queuefile = open("C:\\inetpub\\wwwroot\\queue.html", "a")
+	queuefile = open(WEBDIR+"/queue.html", "a")
 	for idx in currentQueue:
 		queuefile.write("\t<tr>\n\t\t<td>" + idx + "</td>\n")
 	queuefile.close()
@@ -37,7 +38,7 @@ def queueUpdate():
 	
 def tailQueue():
 	#rewrite to use webdir from Settings.py
-	queuefile = open("C:\\inetpub\\wwwroot\\queue.html", "a")
+	queuefile = open(WEBDIR+"/queue.html", "a")
 	queuefile.write("\n\t</tr>\n</table>")
 	queuefile.close()
 	
@@ -45,11 +46,11 @@ def tailQueue():
 	
 def untailQueue():
 	#rewrite to use webdir from Settings.py
-	queuefile = open("C:\\inetpub\\wwwroot\\queue.html", "r")
+	queuefile = open(WEBDIR+"/queue.html", "r")
 	lines = queuefile.readlines()
 	queuefile.close()
 	#rewrite to use webdir from Settings.py
-	queuefile = open("C:\\inetpub\\wwwroot\\queue.html", "w")
+	queuefile = open(WEBDIR+"/queue.html", "w")
 	queuefile.writelines([item for item in lines[:-2]])
 	queuefile.close()
 
@@ -58,9 +59,9 @@ def untailQueue():
 currentQueue = []
 def queueInit():
 	#rewrite to use webdir from Settings.py
-	queuefile = open("C:\\inetpub\\wwwroot\\queue.html", "a")
+	queuefile = open(WEBDIR+"/queue.html", "a")
 	#rewrite to use webdir from Settings.py
-	open("C:\\inetpub\\wwwroot\\queue.html", 'w').close()
+	open(WEBDIR+"/queue.html", 'w').close()
 	TableTop = '<table style="width:100%">\n\t<tr>\n\t\t<th align="left">Demo Name</th>\n\t</tr>\n'
 	queuefile.write(TableTop)
 	queuefile.close()
@@ -90,17 +91,17 @@ def gameRunning(exeName):
 	
 # game launcher
 def launchGame():
-	if gameRunning("cnq3.exe") == False:
+	if gameRunning(GAMEBIN) == False:
 		if len(currentQueue) == 0:
 			randomQueue()
 		global launchdemo
 		launchdemo = currentQueue.pop(0)
 		#rewrite to use gamedir from Settings.py
-		obsfile = open("E:\\quake\\upcomming.txt", "w")
+		obsfile = open(GAMEDIR + "/upcomming.txt", "w")
 		obsfile.write(" " + launchdemo + " ")
 		obsfile.close()
 		time.sleep(20)
 		print("Launching game with demo:" + launchdemo)
 		#rewrite to use gamedir and gamebin from Settings.py
-		subprocess.Popen(("E:\quake\cnq3.exe +set fs_basepath E:\quake +demo" + "\"" + launchdemo.rstrip() + "\""  +" +set nextdemo quit"), cwd="E:\quake")
+		subprocess.Popen((GAMEDIR + "/" + GAMEBIN + " +set fs_basepath " + GAMEDIR + " +demo" + "\"" + launchdemo.rstrip() + "\""  +" +set nextdemo quit"), cwd=GAMEDIR)
 		queueUpdate()
