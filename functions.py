@@ -11,7 +11,7 @@ def updateDemos():
 	TableTop = '<table style="width:100%">\n<tr>\n<th align="left">Demo ID</th>\n<th align="left">Demo Name</th>\n</tr>\n'
 	openfile.write(TableTop)
 	#rewrite to use gamedir and moddir from Settings.py
-	path = "GAMEDIR + "/" + MODDIR + "/demos""
+	path = GAMEDIR + "/" + MODDIR + "/demos"
 	dirs = os.listdir ( path )
 	for filenumber in range(len(dirs)):
 		demoname = dirs[filenumber].rsplit('.', 1)
