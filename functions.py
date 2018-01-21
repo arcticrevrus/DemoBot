@@ -80,19 +80,18 @@ def queueAdd(chatQueue):
 	print(currentQueue)
 
 def gameRunning(exeName):
-		if platform.system() == 'Windows':
-				process = subprocess.Popen(
-						'tasklist.exe /FO CSV /FI "IMAGENAME eq %s"' % exeName,
-						stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-						universal_newlines=True )
-				out, err = process.communicate()
-				try : return out.split("\n")[1].startswith('"%s"' % exeName)
-				except : return False
-		else:
-				if os.popen("ps x -o pid,args | grep " + exeName + " | grep -v grep").read():
-						print("yes")
-						try : return out.split("\n")[1].startswith('"%s"' % exeName)
-						except : return False
+	if platform.system() == 'Windows':
+			process = subprocess.Popen(
+					'tasklist.exe /FO CSV /FI "IMAGENAME eq %s"' % exeName,
+					stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+					universal_newlines=True )
+			out, err = process.communicate()
+			try : return out.split("\n")[1].startswith('"%s"' % exeName)
+			except : return False
+	else:
+			if os.popen("ps x -o pid,args | grep " + exeName + " | grep -v grep"):
+					try : return exeName
+					except : return False
 	
 # game launcher
 def launchGame():
