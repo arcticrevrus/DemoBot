@@ -1,6 +1,6 @@
-import os, random, psutil, subprocess, time
+import os, random, psutil, subprocess, time, platform
 from Socket import openSocket, sendMessage
-from settings import *
+from Settings import *
 demolist = []
 # demo directory creation
 def updateDemos():
@@ -42,7 +42,7 @@ def tailQueue():
 	queuefile.write("\n\t</tr>\n</table>")
 	queuefile.close()
 	
-# Removes end of table from queue file so file can be written to
+# Removes end of table from queue file so file can be written to	
 	
 def untailQueue():
 	#rewrite to use webdir from Settings.py
@@ -80,14 +80,19 @@ def queueAdd(chatQueue):
 	print(currentQueue)
 
 def gameRunning(exeName):
-	# write an if statement for detecting linux, pull from ps if so
-    process = subprocess.Popen( 
-        'tasklist.exe /FO CSV /FI "IMAGENAME eq %s"' % exeName,
-        stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-        universal_newlines=True )
-    out, err = process.communicate()    
-    try : return out.split("\n")[1].startswith('"%s"' % exeName)
-    except : return False	
+		if platform.system() == 'Windows':
+				process = subprocess.Popen(
+						'tasklist.exe /FO CSV /FI "IMAGENAME eq %s"' % exeName,
+						stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+						universal_newlines=True )
+				out, err = process.communicate()
+				try : return out.split("\n")[1].startswith('"%s"' % exeName)
+				except : return False
+		else:
+				if os.popen("ps x -o pid,args | grep " + exeName + " | grep -v grep").read():
+						print("yes")
+						try : return out.split("\n")[1].startswith('"%s"' % exeName)
+						except : return False
 	
 # game launcher
 def launchGame():
