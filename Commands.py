@@ -1,7 +1,7 @@
 import subprocess, re, psutil
 from Socket import openSocket, sendMessage
 from functions import *
-from settings import *
+from Settings import *
 
 commands = {"!help", "!add", "!demolist", "!commands", "!queue", "!download", "!upload", "!current", "!report" }
 
@@ -46,7 +46,7 @@ def commandAdd(s, message):
 		else:
 			sendMessage(s, "Invalid ID")
 	else:
-		sendMessage(s, "Invalid Format. Example: !demo 36")
+		sendMessage(s, "Invalid Format. Example: !add 36")
 		
 def commandUpdatedemos(s):
 	sendMessage(s, "Updated demos file.")
