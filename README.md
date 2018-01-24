@@ -6,6 +6,7 @@ Example: http://twitch.tv/CPMAReplays
 # Requirements
 
 Python 3
+
 Twitch account for bot.
 
 Twitch account for channel. (could optionally use bot account)
