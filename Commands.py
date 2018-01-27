@@ -41,8 +41,11 @@ def commandAdd(s, message):
 	if re.search(r'!add \d+$', message.rstrip()) is not None:
 		if 0 <= int(re.search(r'(\d+)(?!.*\d)', message).group(0)) < len(demolist):
 			chatQueue = demolist[int(re.search(r'\d+$', message.rstrip()).group(0))]
-			queueAdd(chatQueue) 
-			sendMessage(s, "Added Demo: " + demolist[int(re.search(r'\d+$', message.rstrip()).group(0))] + ".")
+			if chatQueue in currentQueue:
+				sendMessage(s, "This demo is already in the queue.")
+			else:
+				queueAdd(chatQueue) 
+				sendMessage(s, "Added Demo: " + demolist[int(re.search(r'\d+$', message.rstrip()).group(0))] + ".")
 		else:
 			sendMessage(s, "Invalid ID")
 	else:
