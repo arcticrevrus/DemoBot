@@ -6,12 +6,12 @@ demolist = []
 def updateDemos():
 	demolist.clear()
 	#rewrite to use webdir from Settings.py
-	openfile = open(WEBDIR+"/index.html", "a")
-	open(WEBDIR+"/index.html", 'w').close()
+	openfile = open(f"{WEBDIR}/index.html", "a")
+	open(f"{WEBDIR}/index.html", 'w').close()
 	TableTop = '<table style="width:100%">\n<tr>\n<th align="left">Demo ID</th>\n<th align="left">Demo Name</th>\n</tr>\n'
 	openfile.write(TableTop)
 	#rewrite to use gamedir and moddir from Settings.py
-	path = GAMEDIR + "/" + MODDIR + "/demos"
+	path = f"{GAMEDIR}/{MODDIR}/demos"
 	dirs = os.listdir ( path )
 	for filenumber in range(len(dirs)):
 		demoname = dirs[filenumber].rsplit('.', 1)
@@ -28,7 +28,7 @@ def queueUpdate():
 	updateDemos()
 	queueInit()
 	#rewrite to use webdir from Settings.py
-	queuefile = open(WEBDIR+"/queue.html", "a")
+	queuefile = open(f"{WEBDIR}/queue.html", "a")
 	for idx in currentQueue:
 		queuefile.write("\t<tr>\n\t\t<td>" + idx + "</td>\n")
 	queuefile.close()
@@ -38,7 +38,7 @@ def queueUpdate():
 	
 def tailQueue():
 	#rewrite to use webdir from Settings.py
-	queuefile = open(WEBDIR+"/queue.html", "a")
+	queuefile = open(f"{WEBDIR}/queue.html", "a")
 	queuefile.write("\n\t</tr>\n</table>")
 	queuefile.close()
 	
@@ -46,11 +46,11 @@ def tailQueue():
 	
 def untailQueue():
 	#rewrite to use webdir from Settings.py
-	queuefile = open(WEBDIR+"/queue.html", "r")
+	queuefile = open(f"{WEBDIR}/queue.html", "r")
 	lines = queuefile.readlines()
 	queuefile.close()
 	#rewrite to use webdir from Settings.py
-	queuefile = open(WEBDIR+"/queue.html", "w")
+	queuefile = open(f"{WEBDIR}/queue.html", "w")
 	queuefile.writelines([item for item in lines[:-2]])
 	queuefile.close()
 
@@ -59,9 +59,9 @@ def untailQueue():
 currentQueue = []
 def queueInit():
 	#rewrite to use webdir from Settings.py
-	queuefile = open(WEBDIR+"/queue.html", "a")
+	queuefile = open(f"{WEBDIR}/queue.html", "a")
 	#rewrite to use webdir from Settings.py
-	open(WEBDIR+"/queue.html", 'w').close()
+	open(f"{WEBDIR}/queue.html", 'w').close()
 	TableTop = '<table style="width:100%">\n\t<tr>\n\t\t<th align="left">Demo Name</th>\n\t</tr>\n'
 	queuefile.write(TableTop)
 	queuefile.close()
@@ -75,9 +75,9 @@ def randomQueue():
 # add chatQueue to the current queue and update queue.html
 
 def queueAdd(chatQueue):
-	currentQueue.append(chatQueue)
-	queueUpdate()
-	print(currentQueue)
+		currentQueue.append(chatQueue)
+		queueUpdate()
+		print(currentQueue)
 
 def gameRunning(exeName):
 	if platform.system() == 'Windows':
@@ -89,7 +89,7 @@ def gameRunning(exeName):
 			try : return out.split("\n")[1].startswith('"%s"' % exeName)
 			except : return False
 	else:
-			if os.popen("ps x -o pid,args | grep " + exeName + " | grep -v grep"):
+			if os.popen(f"ps x -o pid,args | grep {exeName} | grep -v grep"):
 					try : return exeName
 					except : return False
 	
@@ -99,13 +99,18 @@ def launchGame():
 		if len(currentQueue) == 0:
 			randomQueue()
 		global launchdemo
-		launchdemo = currentQueue.pop(0)
-		#rewrite to use gamedir from Settings.py
-		obsfile = open(GAMEDIR + "/upcomming.txt", "w")
-		obsfile.write(" " + launchdemo + " ")
+		launchdemo = currentQueue.pop(0).rstrip()
+		obsfile = open(f"{GAMEDIR}/upcomming.txt", "w")
+		obsfile.write(f" {launchdemo} ")
 		obsfile.close()
+		if UDTENABLE == True:
+			udtJson(launchdemo)	
 		time.sleep(20)
-		print("Launching game with demo:" + launchdemo)
-		#rewrite to use gamedir and gamebin from Settings.py
-		subprocess.Popen((GAMEDIR + "/" + GAMEBIN + " +set fs_basepath " + GAMEDIR + " +demo" + "\"" + launchdemo.rstrip() + "\""  +" +set nextdemo quit"), cwd=GAMEDIR)
+		print(f"Launching game with demo: {launchdemo}")
+		subprocess.Popen((f"{GAMEDIR}/{GAMEBIN} +set fs_basepath {GAMEDIR} +demo \"{launchdemo}\" +set nextdemo quit"), cwd=GAMEDIR)
 		queueUpdate()
+
+# UDT JSON Info
+def udtJson(launchdemo):
+	print(f"Creating Demo stats file: {WEBDIR}/stats/{launchdemo}.xml")
+	subprocess.Popen(f"{UDTDIR}/UDT_json.exe -o={WEBDIR}/stats {GAMEDIR}/{MODDIR}/demos/\"{launchdemo}\".dm_68")
